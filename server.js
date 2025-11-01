@@ -1,6 +1,6 @@
 //npm init -y
 //npm install cors
-//npm.install express node-fetch
+//npm install express node-fetch
 //node server.js
 const express = require("express");
 const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
