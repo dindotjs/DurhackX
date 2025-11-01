@@ -30,6 +30,7 @@ app.get("/callback", async (req, res) => {
 
     res.send("Authorization successful! You can close this tab.");
     
+    window.location.href = "http://localhost:8888/success";
 });
 
 app.listen(port, () => {
