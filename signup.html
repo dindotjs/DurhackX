@@ -64,20 +64,34 @@
 
     const db = getFirestore(app);
 
+    window.printPlace = function() {
+        console.log(place_id);
+    }
+
     window.signUp = async function() {
-        alert("Hello!");
         const name = document.getElementById("nameInput").value
         const email = document.getElementById("emailInput").value
         const password = document.getElementById("passwordInput").value
-        if(name == ""  || email == "" || password == "") {
+        
+        if(!name || !email || !password || !place_id) {
+            alert("Please enter all fields!")
             return;
         }
-        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-        await setDoc(doc(db, "users", userCredential.user.uid), {
-            name,
-            email,
-            createdAt: new Date()
-        });
+        try {
+            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+            await setDoc(doc(db, "users", userCredential.user.uid), {
+                name,
+                email,
+                place_id,
+                createdAt: new Date()
+            });
+            alert("Sign up successful!")
+        }
+        catch {
+            alert("Sign up failed! Have you already signed up with this email address?")
+        }
+        
+
     }  
 
     window.Testing = async function() {
@@ -98,18 +112,57 @@
                 <label for="exampleInputEmail1">Email address</label>
                 <input type="email" class="form-control" id="emailInput" aria-describedby="emailHelp" placeholder="Enter email">
                 <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
-            </div>
+            </div> 
             <div class="form-group middle">
                 <label for="exampleInputPassword1">Password</label>
                 <input type="password" class="form-control" id="passwordInput" placeholder="Password">
             </div>
+
+            <input id="autocomplete" class="middle" type="text" placeholder="Enter an address" style="width: 80%; padding: 8px;" />
             
             <p class="middle">Add spotify login</p>
 
             <button type="button" class="btn btn-primary middle" onclick="signUp()">Sign Up</button>
         </form>
 
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+
+    <script 
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyARPrfzTMcxnHvu__CW1u5tuxV11xx0pf0&loading=async&libraries=places&callback=initAutocomplete">
+        async
+        defer
+    </script>
+
+    <script>
+
+    let autocomplete;
+    var place_id;
+
+
+    function initAutocomplete() {
+        autocomplete = new google.maps.places.Autocomplete(
+        document.getElementById('autocomplete'),
+        {
+            types: ['geocode'],
+            componentRestrictions: { country: 'uk' }, // optional
+        }
+        );
+
+        autocomplete.addListener('place_changed', () => {
+        place_id = autocomplete.getPlace().place_id;
+        printPlace();
+
+
+        /*const place = autocomplete.getPlace();
+        console.log('Place ID:', place.place_id);
+        console.log('Selected address:', place.formatted_address);
+        console.log('Coordinates:', place.geometry.location.lat(), place.geometry.location.lng());*/
+        });
+    }
+
+    window.onload = initAutocomplete;
+    </script>
 </body>
 
 </html>
