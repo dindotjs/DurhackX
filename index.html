@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spotify Top Artists</title>
+</head>
+<body>
+    <h1>Spotify Top Artists</h1>
+    
+    <div>
+        <button id="spotifyLogin">Login with Spotify</button>
+    </div>
+    
+    <div>
+        <button id="getTopArtists" disabled>Get Top Artists (Last 6 Months)</button>
+        <button id="getTopArtistsShort" disabled>Get Top Artists (Last 4 Weeks)</button>
+        <button id="getTopArtistsLong" disabled>Get Top Artists (All Time)</button>
+    </div>
+    
+    <div id="output"></div>
+    
+    <script src="script.js"></script>
+    <script>
+        document.getElementById('spotifyLogin').addEventListener('click', function() {
+            linkSpotify();
+        });
+        
+        document.getElementById('getTopArtists').addEventListener('click', function() {
+            getTopArtists('medium_term');
+        });
+        
+        document.getElementById('getTopArtistsShort').addEventListener('click', function() {
+            getTopArtists('short_term');
+        });
+        
+        document.getElementById('getTopArtistsLong').addEventListener('click', function() {
+            getTopArtists('long_term');
+        });
+        
+        window.addEventListener('DOMContentLoaded', function() {
+            const token = localStorage.getItem('spotify_access_token');
+            if (token) {
+                document.getElementById('getTopArtists').disabled = false;
+                document.getElementById('getTopArtistsShort').disabled = false;
+                document.getElementById('getTopArtistsLong').disabled = false;
+                document.getElementById('output').textContent = "Already logged in! Click a button to see your top artists.";
+            }
+        });
+    </script>
+</body>
+</html>
