@@ -63,28 +63,56 @@
         const password = document.getElementById("passwordInput").value
         const postcode = document.getElementById("addressInput").value
         const socialMedia = document.getElementById("socialMediaInput").value
-        const bio = document.getElementById("bioInput")
-        const spotify = document.getElementById("output").textContent;
-        if(name == ""  || email == "" || password == ""|| postcode == "" || spotify != "Successfully authenticated!" || !bio || !socialMedia) {
+        const bio = document.getElementById("bioInput").value
+        const topArtistsText = document.getElementById("topArtists").value
+
+        const topArtists = topArtistsText
+            .split("\n")
+            .map(a => a.trim())
+            .filter(a => a.length > 0); // remove empty lines
+
+        //const spotify = document.getElementById("output").textContent;
+        if(name == ""  || email == "" || password == ""|| postcode == "" || /*spotify != "Successfully authenticated!" ||*/ !bio || !socialMedia || !topArtists) {
             alert("Please enter all fields!")
             return;
 
         }
         try {
-            spotifyData = getTopArtists();
-            console.log(spotifyData);
-            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-            await setDoc(doc(db, "users", userCredential.user.uid), {
-                name,
-                email,
-                postcode,
-                createdAt: new Date()
+        let lat = null;
+        let lng = null;
+
+        if (place_id) {
+            const service = new google.maps.places.PlacesService(document.createElement('div'));
+            const placeDetails = await new Promise((resolve, reject) => {
+                service.getDetails({ placeId: place_id, fields: ["geometry"] }, (place, status) => {
+                    if (status !== google.maps.places.PlacesServiceStatus.OK) reject(status);
+                    else resolve(place);
+                });
             });
-            alert("Sign up successful!")
+            lat = placeDetails.geometry.location.lat();
+            lng = placeDetails.geometry.location.lng();
         }
-        catch {
-            alert("Sign up failed! Have you already signed up with this email address?")
-        }
+
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+
+        // **Modular SDK syntax**
+        await setDoc(doc(db, "users", userCredential.user.uid), {
+            name,
+            email,
+            postcode,
+            socialMedia,
+            bio,
+            topArtists,
+            lat,
+            lng,
+            createdAt: new Date()
+        });
+
+        alert("Sign up successful!");
+    } catch (err) {
+        console.error(err);
+        alert("Sign up failed! Make sure you selected an address.");
+    }
 
     }  
 
@@ -134,11 +162,25 @@
                     <label for="socialMediaInput">Bio</label>
                     <input type="text" class="form-control" id="bioInput" placeholder="Bio">
                 </div>
+                <div class="form-group-middle">
+                <label for="topArtists">Top Artists</label>
+                <textarea
+                    class="form-control"
+                    id="topArtists"
+                    placeholder="Top Artists (Separate by new lines)"
+                    rows="5"  
+                    style="resize: vertical;"  
+                ></textarea>
             </div>
+            </div>
+
+            
             <button id="signButton" type="button" class="btn btn-primary middle" onclick="signUp()">Sign Up</button>
+            <!--
             <div id="spotifyLoginDiv" style="position: fixed; bottom:55%; left:44%;">
                 <button id="output">Login with Spotify</button>
             </div>
+        -->
         </form>
 
 
@@ -150,9 +192,10 @@
         defer
     </script>
     <script>
+        /*
         document.getElementById('output').addEventListener('click', function() {
             linkSpotify();
-        });
+        });*/
     </script>
     <script>
 
