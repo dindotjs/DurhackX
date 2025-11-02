@@ -1,7 +1,3 @@
-//npm init -y
-//npm install cors
-//npm install express node-fetch
-//node server.js
 const express = require("express");
 const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
 const querystring = require("querystring");
@@ -16,7 +12,7 @@ const redirect_uri = "http://localhost:8888/callback";
 app.use(express.static(__dirname));
 
 app.get("/", (req, res) => {
-    res.sendFile(path.join(__dirname, "index.html"));
+    res.sendFile(path.join(__dirname, "spotify.html"));
 });
 
 app.get("/callback", async (req, res) => {
