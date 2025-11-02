@@ -86,6 +86,11 @@ function handleSwipe(deltaX) {
       deltaX > 0 ? 1000 : -1000
     }px) rotate(${deltaX > 0 ? 45 : -45}deg)`;
     currentCard.style.opacity = 1;
+    if (yesOrNo(deltaX)){
+    console.log("Like");
+    } else {
+    console.log("Dislike");
+    }
     setTimeout(() => {
       currentCard.remove();
       currentCard = null;
@@ -95,4 +100,10 @@ function handleSwipe(deltaX) {
     currentCard.style.transform = "translateX(0) rotate(0)";
   }
   isDragging = false;
+}
+function yesOrNo(deltaX){
+  if (deltaX > 0) {
+    return true;
+  }
+  return false;
 }
