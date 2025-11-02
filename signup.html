@@ -69,8 +69,8 @@
 
         }
         try {
-            data = getTopArtists();
-            console.log(data);
+            spotifySata = getTopArtists();
+            console.log(spotifyData);
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
             await setDoc(doc(db, "users", userCredential.user.uid), {
                 name,
