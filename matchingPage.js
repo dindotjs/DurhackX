@@ -15,9 +15,9 @@ for (let i = 10; i >= 1; i--) {
       <img class="profile-pic" src="Profile${i}.jpg" alt="Profile ${i}">
       <div class="profile-info">
         <h2></h2>
-        <p>Age: ${20 + i}</p>
-        <p>Location: City ${i}</p>
-        <p>Bio: Enthusiastic developer and designer.</p>
+        <p id="age">Age: ${20 + i}</p>
+        <p id="location">Location: City ${i}</p>
+        <p id=bio>Bio: Enthusiastic developer and designer.</p>
       </div>
     </div>
   `;
@@ -106,4 +106,12 @@ function yesOrNo(deltaX){
     return true;
   }
   return false;
+}
+function handleYes(){
+  const currentCard = getTopCard();
+  if (!currentCard) return;
+}
+function handleNo(){
+  const currentCard = getTopCard();
+  if (!currentCard) return;
 }
