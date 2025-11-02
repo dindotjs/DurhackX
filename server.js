@@ -42,7 +42,7 @@ app.get("/callback", async (req, res) => {
         res.send(`
             <script>
                 if (window.opener) {
-                    window.opener.postMessage(${JSON.stringify(data)}, '${process.env.APP_URL || 'http://localhost:8888'}');
+                    window.opener.postMessage(${JSON.stringify(data)}, 'https://durhackx.onrender.com');
                     window.close();
                 } else {
                     document.body.innerHTML = '<h3>Authentication successful! You can close this window.</h3>';
