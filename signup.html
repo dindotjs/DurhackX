@@ -62,12 +62,15 @@
         const email = document.getElementById("emailInput").value
         const password = document.getElementById("passwordInput").value
         const postcode = document.getElementById("postcodeInput").value
-        if(name == ""  || email == "" || password == ""|| postcode == "") {
+        const spotify = document.getElementById("output").textContent;
+        if(name == ""  || email == "" || password == ""|| postcode == "" || spotify != "Successfully authenticated!") {
             alert("Please enter all fields!")
             return;
 
         }
         try {
+            data = getTopArtists();
+            console.log(data);
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
             await setDoc(doc(db, "users", userCredential.user.uid), {
                 name,
@@ -121,18 +124,25 @@
                     <input type="text" class="form-control" id="postcodeInput" placeholder="Postcode">
                 </div>
             </div>
-           
             <button id="signButton" type="button" class="btn btn-primary middle" onclick="signUp()">Sign Up</button>
+            <div id="spotifyLoginDiv" style="position: fixed; bottom:55%; left:44%;">
+                <button id="output">Login with Spotify</button>
+            </div>
         </form>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+    <script src="script.js"></script>
     <script 
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyARPrfzTMcxnHvu__CW1u5tuxV11xx0pf0&loading=async&libraries=places&callback=initAutocomplete">
         async
         defer
     </script>
-
+    <script>
+        document.getElementById('output').addEventListener('click', function() {
+            linkSpotify();
+        });
+    </script>
     <script>
 
     let autocomplete;
