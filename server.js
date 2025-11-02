@@ -3,11 +3,10 @@ const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch
 const querystring = require("querystring");
 const path = require("path");
 const app = express();
-
 const port = process.env.PORT || 8888;
 const client_id = process.env.CLIENT_ID || "1732f6ea9de34d09a9d1d7c1b0384b20";
 const client_secret = process.env.CLIENT_SECRET || "74057aa8e1fa48229032809d31ff8c28";
-const redirect_uri = process.env.REDIRECT_URI || "http://localhost:8888/callback";
+const redirect_uri = process.env.REDIRECT_URI || "https://durhackx.onrender.com/callback";
 
 app.use(express.static(__dirname));
 
@@ -17,11 +16,9 @@ app.get("/", (req, res) => {
 
 app.get("/callback", async (req, res) => {
     const code = req.query.code;
-    
     if (!code) {
         return res.status(400).send("No code provided");
     }
-    
     try {
         const tokenResponse = await fetch("https://accounts.spotify.com/api/token", {
             method: "POST",
@@ -35,10 +32,8 @@ app.get("/callback", async (req, res) => {
                 redirect_uri
             })
         });
-        
         const data = await tokenResponse.json();
         console.log("Access Token Response:", data);
-        
         res.send(`
             <script>
                 if (window.opener) {
@@ -59,18 +54,15 @@ app.get("/top-artists", async (req, res) => {
     const accessToken = req.query.access_token;
     const timeRange = req.query.time_range || "medium_term";
     const limit = req.query.limit || 20;
-    
     if (!accessToken) {
         return res.status(400).json({ error: "No access token provided" });
     }
-    
     try {
         const response = await fetch(`https://api.spotify.com/v1/me/top/artists?time_range=${timeRange}&limit=${limit}`, {
             headers: {
                 "Authorization": `Bearer ${accessToken}`
             }
         });
-        
         const data = await response.json();
         res.json(data);
     } catch (error) {
