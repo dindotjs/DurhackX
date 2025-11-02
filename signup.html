@@ -64,8 +64,7 @@
         const postcode = document.getElementById("addressInput").value
         const socialMedia = document.getElementById("socialMediaInput").value
         const bio = document.getElementById("bioInput")
-        const spotify = document.getElementById("output").textContent;
-        if(name == ""  || email == "" || password == ""|| postcode == "" || spotify != "Successfully authenticated!" || !bio || !socialMedia) {
+        if(name == ""  || email == "" || password == ""|| postcode == "" || !bio || !socialMedia) {
             alert("Please enter all fields!")
             return;
 
