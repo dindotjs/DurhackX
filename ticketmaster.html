@@ -1,0 +1,96 @@
+<!doctype html>
+<html>
+    <head>
+        <title>Ticketmaster</title>
+    </head>
+    <body>
+        <p id="concerts">Placeholder</p>
+
+
+        <script 
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyARPrfzTMcxnHvu__CW1u5tuxV11xx0pf0&libraries=places">
+            async
+            defer
+        </script>
+
+        <script>
+            function init() {
+                
+            }
+
+            function getLatLong(placeId) {
+                return new Promise((resolve, reject) => {
+                    const service = new google.maps.places.PlacesService(document.createElement('div'));
+
+                    service.getDetails({ placeId: placeId, fields: ["geometry", "name"] }, (place, status) => {
+                    if (status !== google.maps.places.PlacesServiceStatus.OK) {
+                        reject("Place details request failed: " + status);
+                        return;
+                    }
+
+                    const lat = place.geometry.location.lat();
+                    const lng = place.geometry.location.lng();
+                    console.log("Place:", place.name, "Lat:", lat, "Lng:", lng);
+
+                    resolve({ lat, lng }); // <-- return an object
+                    });
+                });
+            }
+
+
+            async function getEventsByArtist(artistName, lat, lng) {
+                radiusKm = 100;
+                const apiKey = "DWbXcaoALGAXEjMEACxmxaXwrTw6kzRy";
+                const url = `https://app.ticketmaster.com/discovery/v2/events.json?apikey=${apiKey}&keyword=${encodeURIComponent(artistName)}&latlong=${lat},${lng}&radius=${radiusKm}&unit=km&countryCode=GB`;
+
+                const res = await fetch(url);
+                const data = await res.json();
+
+                if (!data._embedded || !data._embedded.events) {
+                    console.log("No events found.");
+                    return [];
+                }
+
+                const events = data._embedded.events.map(event => ({
+                    name: event.name,
+                    date: event.dates.start.localDate,
+                    venue: event._embedded.venues[0].name,
+                    city: event._embedded.venues[0].city.name,
+                    url: event.url
+                }));
+
+                console.table(events);
+                return events;
+                }
+
+                // Example usage:
+            main();
+
+            async function main() {
+            try {
+                const placeId = "ChIJmb1k2ko-eUgRqdwTAv26rVE"; // Example: Leeds
+                const artistName = "Thornhill";
+
+                // Step 1: Get lat/lng from Google Place ID
+                const { lat, lng } = await getLatLong(placeId);
+
+                // Step 2: Call Ticketmaster function with these coordinates
+                const events = await getEventsByArtist(artistName, lat, lng);
+
+                // Step 3: Display events
+                const el = document.getElementById("concerts");
+                if (!events.length) {
+                el.innerHTML = "No events found.";
+                return;
+                }
+                el.innerHTML = events.map(e => `${e.name} – ${e.city}`).join("<br>");
+            } catch (err) {
+                console.error(err);
+                document.getElementById("concerts").innerHTML = "Error loading events.";
+            }
+        }
+        
+
+        </script>
+    </body>
+</html>
