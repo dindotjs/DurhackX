@@ -44,7 +44,7 @@ document.getElementById("loginBtn").addEventListener("click", async () => {
     try {
         await signInWithEmailAndPassword(auth, email, password);
         // Redirect to matching page after login
-        window.location.href = "matching.html";
+        window.location.href = "matchingPage.html";
     } catch (err) {
         alert("Login failed: " + err.message);
         console.error(err);
