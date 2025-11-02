@@ -243,4 +243,42 @@ body{
     align-items: center;
     height: 100vh;
     background-color: black;
+
   }
+
+#facebook{
+    position: fixed;
+    top:20%;
+    left:20%;
+}
+#instagram{
+    position: fixed;
+    top:45%;
+    left:20%;
+}
+#snapchat{
+    position: fixed;
+    top:70%;
+    left:20%;
+}
+#snapWords{
+    position: fixed;
+    top:76%;
+    left:35%;
+    color:white;
+    
+}
+#instWords{
+    position: fixed;
+    top:50%;
+    left:35%;
+    color:white;
+    
+}
+#faceWords{
+    position: fixed;
+    top:25%;
+    left:35%;
+    color:white;
+    
+}
