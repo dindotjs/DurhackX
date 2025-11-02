@@ -24,7 +24,7 @@ async function linkSpotify() {
             document.getElementById('output').textContent = "Successfully authenticated!";
             localStorage.setItem('spotify_access_token', event.data.access_token);
             
-            document.getElementById('getTopArtists').disabled = false;
+            //document.getElementById('getTopArtists').disabled = false;
         }
     }, { once: true });
 }
@@ -38,7 +38,7 @@ async function getTopArtists(timeRange = 'medium_term') {
     }
     
     try {
-        document.getElementById('output').textContent = "Loading top artists...";
+        //document.getElementById('output').textContent = "Loading top artists...";
         
         const response = await fetch(`http://localhost:8888/top-artists?access_token=${encodeURIComponent(accessToken)}&time_range=${timeRange}&limit=20`);
         const data = await response.json();
@@ -48,7 +48,8 @@ async function getTopArtists(timeRange = 'medium_term') {
             return;
         }
         
-        displayTopArtists(data.items);
+        //displayTopArtists(data.items);
+        return data.items;
     } catch (error) {
         console.error("Error:", error);
         document.getElementById('output').textContent = "Error fetching top artists: " + error.message;
