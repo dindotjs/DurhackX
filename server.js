@@ -3,11 +3,11 @@ const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch
 const querystring = require("querystring");
 const path = require("path");
 const app = express();
-const port = 8888;
 
-const client_id = "1732f6ea9de34d09a9d1d7c1b0384b20";
-const client_secret = "74057aa8e1fa48229032809d31ff8c28";
-const redirect_uri = "http://localhost:8888/callback";
+const port = process.env.PORT || 8888;
+const client_id = process.env.CLIENT_ID || "1732f6ea9de34d09a9d1d7c1b0384b20";
+const client_secret = process.env.CLIENT_SECRET || "74057aa8e1fa48229032809d31ff8c28";
+const redirect_uri = process.env.REDIRECT_URI || "http://localhost:8888/callback";
 
 app.use(express.static(__dirname));
 
@@ -42,7 +42,7 @@ app.get("/callback", async (req, res) => {
         res.send(`
             <script>
                 if (window.opener) {
-                    window.opener.postMessage(${JSON.stringify(data)}, 'http://localhost:8888');
+                    window.opener.postMessage(${JSON.stringify(data)}, '${process.env.APP_URL || 'http://localhost:8888'}');
                     window.close();
                 } else {
                     document.body.innerHTML = '<h3>Authentication successful! You can close this window.</h3>';
