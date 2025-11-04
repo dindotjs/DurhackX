@@ -2,7 +2,7 @@ const client_id = "1732f6ea9de34d09a9d1d7c1b0384b20";
 
 async function linkSpotify() {
     var base_url = "https://accounts.spotify.com/authorize";
-    var redirect_uri = "https://durhackx.onrender.com/callback";
+    var redirect_uri = "http://localhost:8888/callback";
     var scope = "user-top-read";
     var auth_url = base_url + "?response_type=code" +
         "&client_id=" + encodeURIComponent(client_id) +
@@ -12,16 +12,12 @@ async function linkSpotify() {
     const authWindow = window.open(auth_url, "_blank", "width=500,height=700");
     
     window.addEventListener("message", (event) => {
-        if (event.origin !== "https://durhackx.onrender.com") {
-            console.log("Ignored message from:", event.origin);
-            return;
-        }
         console.log("Received data:", event.data);
         if (event.data.access_token) {
             console.log("Access Token:", event.data.access_token);
             document.getElementById('output').textContent = "Successfully authenticated!";
             localStorage.setItem('spotify_access_token', event.data.access_token);
-            //document.getElementById('getTopArtists').disabled = false;
+            document.getElementById('getTopArtists').disabled = false;
         }
     }, { once: true });
 }
@@ -33,14 +29,14 @@ async function getTopArtists(timeRange = 'medium_term') {
         return;
     }
     try {
-        //document.getElementById('output').textContent = "Loading top artists...";
-        const response = await fetch(`https://durhackx.onrender.com/top-artists?access_token=${encodeURIComponent(accessToken)}&time_range=${timeRange}&limit=20`);
+        document.getElementById('output').textContent = "Loading top artists...";
+        const response = await fetch(`http://localhost:8888/top-artists?access_token=${encodeURIComponent(accessToken)}&time_range=${timeRange}&limit=20`);
         const data = await response.json();
         if (data.error) {
             document.getElementById('output').textContent = "Error: " + JSON.stringify(data.error);
             return;
         }
-        //displayTopArtists(data.items);
+        displayTopArtists(data.items);
         return data.items;
     } catch (error) {
         console.error("Error:", error);
